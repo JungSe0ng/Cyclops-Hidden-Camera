@@ -5,12 +5,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player</title>
 	<!-- mindar files -->
-	<script src="js/mindar-image.prod"></script>
-	<script src="js/aframe.min"></script>
-	<script src="js/mindar-image-aframe.prod"></script>
+	<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image.prod.js"></script>
+	<script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 	<style>.tmpHidden {display: none;}</style>
 	<!-- finish mindar files -->
-	<script src="Build/CHC.loader.js"></script>
   </head>
   <body style="text-align: center; margin: 0px; padding: 0px; overflow: hidden; ">
 	<div id="unity-container" class="unity-desktop" style="z-index: 2; position: absolute; top: 0; left: 0;">
@@ -63,11 +62,12 @@
 	  
 	  /*finish mindar code*/
       
-	  var buildUrl = "Build";
+	  // Firebase Storage URL
+	  var buildUrl = "https://firebasestorage.googleapis.com/v0/b/cyclops-hidden-camera.appspot.com/o/webgl-build%2F";
 	  var config = {
-        dataUrl: buildUrl + "/CHC.data.unityweb",
-        frameworkUrl: buildUrl + "/CHC.framework.js.unityweb",
-			codeUrl: buildUrl + "/CHC.wasm.unityweb",
+        dataUrl: buildUrl + "CHC.data.unityweb?alt=media",
+        frameworkUrl: buildUrl + "CHC.framework.unityweb?alt=media",
+        codeUrl: buildUrl + "CHC.wasm.unityweb?alt=media",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "OS_WebNovelAR",
@@ -100,18 +100,24 @@
 	  
 	  loadingBar.style.display = "block";
 
-      createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then(ui => {
-			loadingBar.style.display = "none";
-			
-			/*mindar code*/
-			canvas.style.background = "transparent";
-			uiScanning.classList?.remove('tmpHidden');
-			uiLoading.classList?.remove('tmpHidden');
-			/*finish mindar code*/
-			
-	  });
+	  // CHC.loader.js 동적 로드
+	  var loaderScript = document.createElement("script");
+	  loaderScript.src = buildUrl + "CHC.loader.js?alt=media";
+	  loaderScript.onload = function() {
+		  createUnityInstance(canvas, config, (progress) => {
+			  progressBarFull.style.width = 100 * progress + "%";
+			}).then(ui => {
+				loadingBar.style.display = "none";
+				
+				/*mindar code*/
+				canvas.style.background = "transparent";
+				uiScanning.classList?.remove('tmpHidden');
+				uiLoading.classList?.remove('tmpHidden');
+				/*finish mindar code*/
+				
+		  });
+	  };
+	  document.head.appendChild(loaderScript);
     </script>
   </body>
 </html>
