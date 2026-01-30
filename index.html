@@ -66,7 +66,7 @@
 	  var buildUrl = "https://firebasestorage.googleapis.com/v0/b/cyclops-hidden-camera.appspot.com/o/webgl-build%2F";
 	  var config = {
         dataUrl: buildUrl + "CHC.data.unityweb?alt=media",
-        frameworkUrl: buildUrl + "CHC.framework.unityweb?alt=media",
+        frameworkUrl: buildUrl + "CHC.framework.js.unityweb?alt=media",
         codeUrl: buildUrl + "CHC.wasm.unityweb?alt=media",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
@@ -115,7 +115,12 @@
 				uiLoading.classList?.remove('tmpHidden');
 				/*finish mindar code*/
 				
+		  }).catch((error) => {
+			  alert("Unity 로드 실패: " + error);
 		  });
+	  };
+	  loaderScript.onerror = function() {
+		  alert("CHC.loader.js 로드 실패");
 	  };
 	  document.head.appendChild(loaderScript);
     </script>
